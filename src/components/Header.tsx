@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Heart, Search, Menu, X } from "lucide-react";
+import { ShoppingBag, Heart, Search, Menu, X, User, LogOut } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 
 const Header = () => {
   const { totalItems } = useCart();
   const { wishlist } = useWishlist();
+  const { user, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -53,6 +55,15 @@ const Header = () => {
                 </span>
               )}
             </Link>
+            {user ? (
+              <button onClick={() => signOut()} className="p-2 hover:text-accent transition-colors" title="Sign Out">
+                <LogOut className="w-5 h-5" />
+              </button>
+            ) : (
+              <Link to="/auth" className="p-2 hover:text-accent transition-colors" title="Sign In">
+                <User className="w-5 h-5" />
+              </Link>
+            )}
           </div>
         </div>
 
@@ -64,6 +75,11 @@ const Header = () => {
             <Link to="/shop?category=Outerwear" onClick={() => setMobileOpen(false)} className="py-2 hover:text-accent transition-colors">Outerwear</Link>
             <Link to="/shop?category=Knitwear" onClick={() => setMobileOpen(false)} className="py-2 hover:text-accent transition-colors">Knitwear</Link>
             <Link to="/shop?category=Accessories" onClick={() => setMobileOpen(false)} className="py-2 hover:text-accent transition-colors">Accessories</Link>
+            {user ? (
+              <button onClick={() => { signOut(); setMobileOpen(false); }} className="py-2 text-left hover:text-accent transition-colors">Sign Out</button>
+            ) : (
+              <Link to="/auth" onClick={() => setMobileOpen(false)} className="py-2 hover:text-accent transition-colors">Sign In</Link>
+            )}
           </nav>
         )}
       </div>
